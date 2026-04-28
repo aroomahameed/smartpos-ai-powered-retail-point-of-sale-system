@@ -24,10 +24,12 @@ app.get('/', (req, res) => {
 import authRoutes from './modules/auth/auth.routes';
 import productRoutes from './modules/products/product.routes';
 import customerRoutes from './modules/customers/customer.routes';
+import saleRoutes from './modules/sales/sale.routes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
+app.use('/api/sales', saleRoutes);
 
 // app.use('/api/products', productRoutes);
 // app.use('/api/sales', saleRoutes);
