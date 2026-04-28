@@ -21,8 +21,8 @@ app.get('/', (req, res) => {
   res.json({ message: '✅ POS API is running!' });
 });
 
-// TODO: Routes will be added here as we build them
-// app.use('/api/auth', authRoutes);
+import authRoutes from './modules/auth/auth.routes';
+app.use('/api/auth', authRoutes);
 // app.use('/api/products', productRoutes);
 // app.use('/api/sales', saleRoutes);
 // app.use('/api/customers', customerRoutes);
