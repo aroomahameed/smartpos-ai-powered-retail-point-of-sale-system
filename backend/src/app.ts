@@ -22,7 +22,11 @@ app.get('/', (req, res) => {
 });
 
 import authRoutes from './modules/auth/auth.routes';
+import productRoutes from './modules/products/product.routes';
+
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+
 // app.use('/api/products', productRoutes);
 // app.use('/api/sales', saleRoutes);
 // app.use('/api/customers', customerRoutes);
