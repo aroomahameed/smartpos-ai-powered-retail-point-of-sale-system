@@ -5,8 +5,16 @@ export interface ICustomer extends Document {
   email?: string;
   phone: string;
   address?: string;
+  customerType:
+    | 'walk_in'
+    | 'regular'
+    | 'wholesale'
+    | 'vip'
+    | 'credit';
   loyaltyPoints: number;
   totalPurchases: number;
+  lastPurchaseDate?: Date;
+  creditBalance: number;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -34,11 +42,23 @@ const customerSchema = new Schema<ICustomer>(
       type: String,
       trim: true,
     },
+    customerType: {
+      type: String,
+      enum: ['walk_in', 'regular', 'wholesale', 'vip', 'credit'],
+      default: 'regular',
+    },
     loyaltyPoints: {
       type: Number,
       default: 0,
     },
     totalPurchases: {
+      type: Number,
+      default: 0,
+    },
+    lastPurchaseDate: {
+      type: Date,
+    },
+    creditBalance: {
       type: Number,
       default: 0,
     },

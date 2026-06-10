@@ -26,12 +26,20 @@ import productRoutes from './modules/products/product.routes';
 import customerRoutes from './modules/customers/customer.routes';
 import saleRoutes from './modules/sales/sale.routes';
 import reportRoutes from './modules/reports/report.routes';
+import returnRoutes from './modules/returns/return.routes';
+import couponRoutes from './modules/coupons/coupon.routes';
+import inventoryRoutes from './modules/inventory/inventory.routes';
+import supplierRoutes from './modules/suppliers/supplier.routes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/sales', saleRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/returns', returnRoutes);
+app.use('/api/coupons', couponRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/suppliers', supplierRoutes);
 
 
 

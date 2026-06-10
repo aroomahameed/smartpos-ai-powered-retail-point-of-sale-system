@@ -8,8 +8,13 @@ export interface IProduct extends Document {
   cost: number;
   stock: number;
   lowStockAlert: number;
+  reorderLevel: number;
   category: string;
   unit: string;
+  supplier?: string;
+  location?: string;
+  batchNumber?: string;
+  expiryDate?: Date;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -52,6 +57,11 @@ const productSchema = new Schema<IProduct>(
       type: Number,
       default: 10,
     },
+    reorderLevel: {
+      type: Number,
+      default: 10,
+      min: 0,
+    },
     category: {
       type: String,
       required: [true, 'Category is required'],
@@ -60,6 +70,21 @@ const productSchema = new Schema<IProduct>(
     unit: {
       type: String,
       default: 'pcs',
+    },
+    supplier: {
+      type: String,
+      trim: true,
+    },
+    location: {
+      type: String,
+      trim: true,
+    },
+    batchNumber: {
+      type: String,
+      trim: true,
+    },
+    expiryDate: {
+      type: Date,
     },
     isActive: {
       type: Boolean,

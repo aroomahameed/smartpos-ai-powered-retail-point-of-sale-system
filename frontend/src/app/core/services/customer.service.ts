@@ -1,7 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { Customer, CustomerResponse } from '../models/customer.model';
+import {
+  Customer,
+  CustomerProfileResponse,
+  CustomerResponse,
+} from '../models/customer.model';
 
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
@@ -27,6 +31,10 @@ export class CustomerService {
   // 🔷 Get customer by id
   getCustomerById(id: string): Observable<{ customer: Customer }> {
     return this.http.get<{ customer: Customer }>(`${this.API_URL}/${id}`);
+  }
+
+  getCustomerProfile(id: string): Observable<CustomerProfileResponse> {
+    return this.http.get<CustomerProfileResponse>(`${this.API_URL}/${id}/profile`);
   }
 
   // 🔷 Create customer

@@ -46,7 +46,22 @@ export const getProductById = async (req: Request, res: Response): Promise<void>
 // @access  Private - Admin, Manager
 export const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, sku, barcode, price, cost, stock, lowStockAlert, category, unit } = req.body;
+    const {
+      name,
+      sku,
+      barcode,
+      price,
+      cost,
+      stock,
+      lowStockAlert,
+      reorderLevel,
+      category,
+      unit,
+      supplier,
+      location,
+      batchNumber,
+      expiryDate,
+    } = req.body;
 
     const existing = await Product.findOne({ sku });
     if (existing) {
@@ -56,7 +71,9 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
 
     const product = await Product.create({
       name, sku, barcode, price, cost,
-      stock, lowStockAlert, category, unit,
+      stock, lowStockAlert, reorderLevel,
+      category, unit, supplier, location, batchNumber,
+      expiryDate: expiryDate ? new Date(expiryDate) : undefined,
     });
 
     res.status(201).json({

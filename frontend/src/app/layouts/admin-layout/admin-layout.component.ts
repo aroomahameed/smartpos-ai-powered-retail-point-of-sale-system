@@ -1,5 +1,5 @@
 import { Component, signal, computed, inject } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
+import { filter } from 'rxjs';
 
 interface NavItem {
   label: string;
@@ -43,8 +44,13 @@ interface NavItem {
 
         <!-- Logo -->
         <div class="logo">
-          <mat-icon>point_of_sale</mat-icon>
-          <span>POS System</span>
+          <div class="logo-icon">
+            <mat-icon>point_of_sale</mat-icon>
+          </div>
+          <div>
+            <span>RetailOS</span>
+            <small>Advanced POS</small>
+          </div>
         </div>
 
         <!-- Nav Items -->
@@ -61,8 +67,12 @@ interface NavItem {
         </mat-nav-list>
 
         <!-- Logout -->
-        <div class="logout">
-          <button mat-stroked-button color="warn" (click)="logout()">
+        <div class="sidebar-footer">
+          <div class="role-pill">
+            <mat-icon>verified_user</mat-icon>
+            {{ userRole() | titlecase }}
+          </div>
+          <button mat-stroked-button (click)="logout()">
             <mat-icon>logout</mat-icon>
             Logout
           </button>
@@ -73,7 +83,7 @@ interface NavItem {
       <mat-sidenav-content>
 
         <!-- Toolbar -->
-        <mat-toolbar color="primary">
+        <mat-toolbar>
           <button mat-icon-button (click)="toggleSidenav()">
             <mat-icon>menu</mat-icon>
           </button>
@@ -107,44 +117,174 @@ interface NavItem {
     </mat-sidenav-container>
   `,
   styles: [`
-    .sidenav-container { height: 100vh; }
+    .sidenav-container {
+      height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(15,143,120,0.08), transparent 260px),
+        var(--app-bg);
+    }
 
     .sidenav {
-      width: 240px;
-      background: #1a237e;
+      width: 268px;
+      border-right: 0;
+      background:
+        linear-gradient(180deg, var(--app-sidebar) 0%, var(--app-sidebar-2) 100%);
       color: white;
       display: flex;
       flex-direction: column;
+      box-shadow: 18px 0 40px rgba(16, 24, 39, 0.18);
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 20px 16px;
-      font-size: 1.2rem;
-      font-weight: bold;
+      gap: 12px;
+      min-height: 86px;
+      padding: 18px 18px;
       color: white;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(135deg, rgba(15,143,120,0.22), transparent 68%);
     }
 
-    mat-nav-list { flex: 1; padding-top: 8px; }
+    .logo-icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: rgba(15,143,120,0.22);
+      color: #6ee7ce;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
 
-    mat-list-item { color: rgba(255,255,255,0.8); border-radius: 8px; margin: 2px 8px; cursor: pointer; }
-    mat-list-item:hover { background: rgba(255,255,255,0.1); color: white; }
-    .active-link { background: rgba(255,255,255,0.2) !important; color: white !important; }
+    .logo span {
+      display: block;
+      font-size: 1.12rem;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
 
-    .logout { padding: 16px; }
+    .logo small {
+      display: block;
+      margin-top: 2px;
+      color: rgba(255,255,255,0.62);
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    mat-nav-list {
+      flex: 1;
+      padding: 14px 10px;
+    }
+
+    mat-list-item {
+      height: 48px !important;
+      color: #ffffff !important;
+      border-radius: 12px;
+      margin: 4px 0;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+    }
+
+    mat-list-item:hover {
+      background: rgba(255,255,255,0.08);
+      color: #ffffff !important;
+      transform: translateX(2px);
+    }
+
+    mat-list-item mat-icon {
+      color: #ffffff !important;
+    }
+
+    mat-list-item span,
+    mat-list-item .mdc-list-item__primary-text {
+      color: #ffffff !important;
+    }
+
+    .active-link {
+      background: linear-gradient(135deg, rgba(15,143,120,0.96), rgba(37,93,168,0.82)) !important;
+      color: #ffffff !important;
+      box-shadow: 0 12px 26px rgba(15, 143, 120, 0.26);
+    }
+
+    .active-link mat-icon {
+      color: white !important;
+    }
+
+    .sidebar-footer {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .sidebar-footer button {
+      justify-content: flex-start;
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.82);
+      border-radius: 10px;
+    }
+
+    .role-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(217, 139, 24, 0.14);
+      color: #f3be6f;
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    mat-toolbar {
+      height: 66px;
+      color: var(--app-ink);
+      background: rgba(255,255,255,0.86);
+      border-bottom: 1px solid var(--app-border);
+      box-shadow: 0 8px 24px rgba(16, 24, 39, 0.06);
+      backdrop-filter: blur(12px);
+    }
 
     .spacer { flex: 1; }
 
-    .toolbar-title { font-size: 1.1rem; margin-left: 8px; }
+    .toolbar-title {
+      font-size: 1.08rem;
+      font-weight: 900;
+      margin-left: 10px;
+      color: var(--app-ink);
+    }
 
-    .content { padding: 24px; }
+    mat-toolbar button {
+      color: var(--app-ink);
+    }
+
+    .content {
+      min-height: calc(100vh - 66px);
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(15,143,120,0.08), transparent 240px),
+        var(--app-bg);
+      overflow: auto;
+    }
+
+    @media (max-width: 820px) {
+      .sidenav {
+        width: 250px;
+      }
+
+      .content {
+        padding: 16px;
+      }
+    }
   `]
 })
 export class AdminLayoutComponent {
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   // 🔷 Signals
   sidenavOpen = signal<boolean>(true);
@@ -160,6 +300,7 @@ export class AdminLayoutComponent {
       dashboard: 'Dashboard',
       pos: 'Point of Sale',
       products: 'Products',
+      suppliers: 'Suppliers & Purchases',
       customers: 'Customers',
       sales: 'Sales History',
       reports: 'Reports',
@@ -177,10 +318,23 @@ export class AdminLayoutComponent {
     { label: 'Dashboard', icon: 'dashboard', route: 'dashboard', roles: ['admin', 'manager', 'cashier'] },
     { label: 'POS', icon: 'point_of_sale', route: 'pos', roles: ['admin', 'manager', 'cashier'] },
     { label: 'Products', icon: 'inventory_2', route: 'products', roles: ['admin', 'manager'] },
+    { label: 'Suppliers', icon: 'local_shipping', route: 'suppliers', roles: ['admin', 'manager'] },
     { label: 'Customers', icon: 'people', route: 'customers', roles: ['admin', 'manager', 'cashier'] },
     { label: 'Sales', icon: 'receipt_long', route: 'sales', roles: ['admin', 'manager'] },
     { label: 'Reports', icon: 'bar_chart', route: 'reports', roles: ['admin', 'manager'] },
   ];
+
+  constructor() {
+    this.setCurrentRoute(this.router.url);
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event) => this.setCurrentRoute(event.urlAfterRedirects));
+  }
+
+  private setCurrentRoute(url: string): void {
+    const segment = url.split('?')[0].split('/').filter(Boolean).pop() || 'dashboard';
+    this.currentRoute.set(segment);
+  }
 
   toggleSidenav(): void {
     this.sidenavOpen.update((v) => !v);

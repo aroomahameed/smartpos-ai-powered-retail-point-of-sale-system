@@ -1,4 +1,61 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+:root {
+  --app-bg: #eef4f2;
+  --app-surface: #ffffff;
+  --app-surface-soft: #f7faf9;
+  --app-ink: #101827;
+  --app-ink-muted: #627084;
+  --app-primary: #0f8f78;
+  --app-primary-dark: #0b695d;
+  --app-secondary: #255da8;
+  --app-accent: #d98b18;
+  --app-danger: #bf2d3a;
+  --app-border: #dfe9e6;
+  --app-sidebar: #101827;
+  --app-sidebar-2: #162235;
+  --app-shadow: 0 18px 45px rgba(16, 24, 39, 0.12);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Roboto, "Helvetica Neue", sans-serif;
+  color: var(--app-ink);
+  background:
+    linear-gradient(180deg, rgba(15, 143, 120, 0.06), transparent 240px),
+    var(--app-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-fab.mat-primary,
+.mat-mdc-mini-fab.mat-primary {
+  --mdc-protected-button-container-color: var(--app-primary);
+  --mdc-filled-button-container-color: var(--app-primary);
+  --mdc-fab-container-color: var(--app-primary);
+  --mdc-protected-button-label-text-color: #ffffff;
+  --mdc-filled-button-label-text-color: #ffffff;
+  --mat-fab-foreground-color: #ffffff;
+}
+
+.mat-mdc-raised-button.mat-primary:hover,
+.mat-mdc-unelevated-button.mat-primary:hover {
+  filter: brightness(0.96);
+}
+
+.mat-mdc-card {
+  color: var(--app-ink);
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background: rgba(15, 143, 120, 0.06);
+}

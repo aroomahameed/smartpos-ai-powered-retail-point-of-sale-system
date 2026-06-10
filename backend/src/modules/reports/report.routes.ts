@@ -3,6 +3,7 @@ import {
   getDashboardStats,
   getSalesReport,
   getInventoryReport,
+  getAnalyticsReport,
 } from './report.controller';
 import { protect } from '../../middleware/auth.middleware';
 import { requireRole } from '../../middleware/role.middleware';
@@ -31,6 +32,14 @@ router.get(
   protect,
   requireRole('admin', 'manager'),
   getInventoryReport
+);
+
+// @route   GET /api/reports/analytics
+router.get(
+  '/analytics',
+  protect,
+  requireRole('admin', 'manager'),
+  getAnalyticsReport
 );
 
 export default router;

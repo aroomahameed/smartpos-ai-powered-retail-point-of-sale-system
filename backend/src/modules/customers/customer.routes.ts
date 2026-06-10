@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getCustomers,
   getCustomerById,
+  getCustomerProfile,
   createCustomer,
   updateCustomer,
   deleteCustomer,
@@ -13,6 +14,14 @@ const router = Router();
 
 // @route   GET /api/customers
 router.get('/', protect, getCustomers);
+
+// @route   GET /api/customers/:id
+router.get(
+  '/:id/profile',
+  protect,
+  requireRole('admin', 'manager', 'cashier'),
+  getCustomerProfile
+);
 
 // @route   GET /api/customers/:id
 router.get('/:id', protect, getCustomerById);

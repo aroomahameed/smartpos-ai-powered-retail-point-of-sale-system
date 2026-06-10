@@ -1,11 +1,19 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { Product, ProductResponse } from '../models/product.model';
+import {
+  InventoryDashboard,
+  InventoryHistoryResponse,
+  InventoryMovementPayload,
+  InventoryMovementResponse,
+  Product,
+  ProductResponse,
+} from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private readonly API_URL = 'http://localhost:3000/api/products';
+  private readonly INVENTORY_API_URL = 'http://localhost:3000/api/inventory';
 
   // 🔷 Signals
   products = signal<Product[]>([]);
@@ -58,6 +66,32 @@ export class ProductService {
     return this.http.delete<ProductResponse>(`${this.API_URL}/${id}`).pipe(
       tap(() => {
         this.products.update((prev) => prev.filter((p) => p._id !== id));
+      })
+    );
+  }
+
+  getInventoryDashboard(): Observable<InventoryDashboard> {
+    return this.http.get<InventoryDashboard>(`${this.INVENTORY_API_URL}/dashboard`);
+  }
+
+  getInventoryHistory(params?: any): Observable<InventoryHistoryResponse> {
+    return this.http.get<InventoryHistoryResponse>(
+      `${this.INVENTORY_API_URL}/history`,
+      { params }
+    );
+  }
+
+  createInventoryMovement(payload: InventoryMovementPayload): Observable<InventoryMovementResponse> {
+    return this.http.post<InventoryMovementResponse>(
+      `${this.INVENTORY_API_URL}/movements`,
+      payload
+    ).pipe(
+      tap((res) => {
+        this.products.update((prev) =>
+          prev.map((product) =>
+            product._id === res.product._id ? res.product : product
+          )
+        );
       })
     );
   }

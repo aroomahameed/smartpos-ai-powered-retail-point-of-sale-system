@@ -29,6 +29,14 @@ export const ADMIN_ROUTES: Routes = [
             .then((m) => m.ProductsComponent),
       },
       {
+        path: 'suppliers',
+        canActivate: [roleGuard],
+        data: { roles: ['admin', 'manager'] },
+        loadComponent: () =>
+          import('../../features/suppliers/suppliers.component')
+            .then((m) => m.SuppliersComponent),
+      },
+      {
         path: 'customers',
         loadComponent: () =>
           import('../../features/customers/customers.component')
