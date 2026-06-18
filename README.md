@@ -9,22 +9,19 @@ SmartPOS is designed for grocery stores, pharmacies, cosmetics shops, food shops
 
 Demo Video: [Watch SmartPOS Demo](docs/demo/smartpos-demo.webm)
 
-Frontend Demo: Coming soon
-Admin Demo: Coming soon
-
 Demo Credentials:
 
 Admin User:
-Name: Demo Admin
+Name: Admin
 Role: Admin
-Email: admin@example.com
-Password: admin123
+Email: admin@pos.co
+Password: 123456
 
 Cashier User:
-Name: Demo Cashier
+Name: Cashier
 Role: Cashier
-Email: cashier@example.com
-Password: cashier123
+Email: user@pos.com
+Password: 123456
 
 ## Screenshots
 
