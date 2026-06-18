@@ -22,16 +22,29 @@ Password: cashier123
 
 ## Screenshots
 
-Add screenshots here.
+### Login Page
 
-Suggested screenshots:
+![Login page](docs/screenshots/login-page.png)
 
-- Login page
-- Admin dashboard
-- POS checkout screen
-- Inventory dashboard
-- Reports and analytics page
-- AI business assistant panel
+### Admin Dashboard
+
+![Admin dashboard](docs/screenshots/admin-dashboard.png)
+
+### POS Checkout Screen
+
+![POS checkout screen](docs/screenshots/pos-checkout-screen.png)
+
+### Inventory Dashboard
+
+![Inventory dashboard](docs/screenshots/inventory-dashboard.png)
+
+### Reports and Analytics Page
+
+![Reports and analytics page](docs/screenshots/reports-analytics.png)
+
+### AI Business Assistant Panel
+
+![AI business assistant panel](docs/screenshots/ai-business-assistant.png)
 
 ## Features
 
